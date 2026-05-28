@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">传统测试与 Agent 测试重点对比</title>
+  <desc id="desc">图中用两条轨道展示传统 Java 测试关注代码输出，Agent 测试同时关注任务过程、工具使用和安全边界。</desc>
+  <rect width="1120" height="560" rx="28" fill="#fffdf7"/>
+  <rect x="32" y="32" width="1056" height="496" rx="22" fill="#f7f4ed" stroke="#ded7c8" stroke-width="2"/>
+
+  <text x="72" y="86" fill="#20201d" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="28" font-weight="800">测试重点：结果正确，还要过程可靠</text>
+  <text x="72" y="122" fill="#68645c" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="17">Agent 的质量不只取决于最终答案，还取决于它是否按安全、可追踪的方式完成任务。</text>
+
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif">
+    <text x="92" y="212" fill="#2f6f5e" font-size="20" font-weight="800">Java 测试轨道</text>
+    <line x1="250" y1="204" x2="990" y2="204" stroke="#2f6f5e" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#fffdf7" stroke="#2f6f5e" stroke-width="2">
+      <circle cx="320" cy="204" r="34"/>
+      <circle cx="510" cy="204" r="34"/>
+      <circle cx="700" cy="204" r="34"/>
+      <circle cx="890" cy="204" r="34"/>
+    </g>
+    <g fill="#20201d" font-size="16" font-weight="700" text-anchor="middle">
+      <text x="320" y="209">单测</text>
+      <text x="510" y="209">集成</text>
+      <text x="700" y="209">接口</text>
+      <text x="890" y="209">压测</text>
+    </g>
+    <text x="250" y="278" fill="#68645c" font-size="16">重点：相同输入能否得到稳定、正确、可复现的输出。</text>
+
+    <text x="92" y="366" fill="#b85c38" font-size="20" font-weight="800">Agent 测试轨道</text>
+    <line x1="250" y1="358" x2="990" y2="358" stroke="#b85c38" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#fffdf7" stroke="#b85c38" stroke-width="2">
+      <circle cx="310" cy="358" r="34"/>
+      <circle cx="470" cy="358" r="34"/>
+      <circle cx="630" cy="358" r="34"/>
+      <circle cx="790" cy="358" r="34"/>
+      <circle cx="950" cy="358" r="34"/>
+    </g>
+    <g fill="#20201d" font-size="15" font-weight="700" text-anchor="middle">
+      <text x="310" y="363">意图</text>
+      <text x="470" y="363">上下文</text>
+      <text x="630" y="363">工具</text>
+      <text x="790" y="363">验证</text>
+      <text x="950" y="363">边界</text>
+    </g>
+    <text x="250" y="432" fill="#68645c" font-size="16">重点：是否读对上下文、用对工具、能从失败恢复，并在高风险时停下。</text>
+  </g>
+</svg>
