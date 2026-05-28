@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Yunxi 博客图标</title>
+  <desc id="desc">暖色纸张背景上的抽象 Y 字母，由工程线路和分支结构组成。</desc>
+  <rect width="512" height="512" rx="112" fill="#f7f4ed"/>
+  <rect x="42" y="42" width="428" height="428" rx="88" fill="#fffdf7" stroke="#ded7c8" stroke-width="10"/>
+  <path d="M164 138l92 110 92-110" fill="none" stroke="#1f4f43" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M256 248v128" fill="none" stroke="#1f4f43" stroke-width="34" stroke-linecap="round"/>
+  <path d="M156 138h-34m268 0h-34M256 376h-54m54 0h54" fill="none" stroke="#b85c38" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="122" cy="138" r="18" fill="#b85c38"/>
+  <circle cx="390" cy="138" r="18" fill="#b85c38"/>
+  <circle cx="202" cy="376" r="16" fill="#2f6f5e"/>
+  <circle cx="310" cy="376" r="16" fill="#2f6f5e"/>
+  <circle cx="256" cy="248" r="18" fill="#fffdf7" stroke="#1f4f43" stroke-width="10"/>
+</svg>
