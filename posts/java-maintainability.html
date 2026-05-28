@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从模块边界、数据模型、事务范围、测试策略和可观测性五个维度，系统讲解 Java 项目如何避免越写越乱。">
+  <title>Java 项目如何避免越写越乱 | Yunxi</title>
+  <link rel="icon" href="/assets/site-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../">Yunxi</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../#featured">精选</a>
+      <a href="../#posts">文章</a>
+      <a href="../#method">方法论</a>
+      <a href="../#about">关于</a>
+    </nav>
+  </header>
+
+  <main class="article-shell">
+    <article class="article">
+      <div class="article-body">
+        <p class="eyebrow">2026-05-28 · Java Architecture</p>
+        <h1>Java 项目如何避免越写越乱</h1>
+        <p class="lead">
+          一个 Java 项目开始变乱，通常不是因为用了 Spring Boot，也不是因为没有微服务，而是因为边界、数据流、事务和测试没有形成稳定的工程秩序。
+        </p>
+
+        <figure class="article-figure">
+          <img src="../assets/java-maintainability-map.svg" alt="Java 项目的可维护性地图">
+          <figcaption>可维护性不是一种代码风格，而是一组让变更成本可预期的工程安排。</figcaption>
+        </figure>
+
+        <h2>一、先保护模块边界，不要先追求抽象</h2>
+        <p>
+          很多项目越写越乱，是因为所有业务都能互相调用：订单服务直接改用户状态，控制器里拼装复杂业务，工具类慢慢变成万能垃圾桶。短期看开发很快，长期看每次改动都像拆雷。
+        </p>
+        <p>
+          边界的目标不是“分层好看”，而是让责任清晰。Controller 只处理协议和参数，Application Service 编排用例，Domain 或业务服务表达规则，Repository 负责持久化。哪怕项目不大，也要让每层知道自己不该做什么。
+        </p>
+
+        <h2>二、数据模型不要混用</h2>
+        <p>
+          Entity、DTO、VO、Command 混着用，是 Java 项目腐化的高发点。数据库实体被直接返回给前端，前端字段反过来影响数据库字段，接口为了兼容页面不断塞临时属性，最后一个类承载了三四种语义。
+        </p>
+        <p>
+          更稳的做法是：数据库 Entity 只表达持久化结构；DTO 表达接口传输；Command 表达一次业务动作；View Object 表达页面需要的展示结果。转换代码看起来多一点，但它换来的是边界清晰和演进自由。
+        </p>
+
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>模型</th>
+              <th>应该承载</th>
+              <th>不应该承载</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Entity</td>
+              <td>数据库字段、持久化关系、必要的领域约束</td>
+              <td>前端展示字段、临时统计字段、第三方接口结构</td>
+            </tr>
+            <tr>
+              <td>DTO</td>
+              <td>接口输入输出结构、跨系统传输数据</td>
+              <td>数据库注解、复杂业务行为</td>
+            </tr>
+            <tr>
+              <td>Command</td>
+              <td>一次业务动作所需的最小输入</td>
+              <td>页面展示字段、历史兼容垃圾字段</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>三、事务范围要小，业务一致性要明确</h2>
+        <p>
+          事务不是越大越安全。把远程调用、文件上传、消息发送、复杂循环都包进一个大事务，会让锁时间变长，也会让失败恢复更困难。
+        </p>
+        <p>
+          判断事务范围时可以问三个问题：哪些数据必须同时成功？失败后能否重试？有没有外部副作用？如果一个动作涉及外部系统，通常要考虑本地事务 + 事件表 + 补偿机制，而不是指望一个数据库事务解决全部问题。
+        </p>
+
+        <h3>真实场景：订单支付后的库存和通知</h3>
+        <p>
+          假设支付成功后要扣库存、生成订单流水、发送站内信、推送短信。如果把这些动作全部放进一个事务，短信服务慢会拖垮数据库事务，短信失败还可能让订单状态回滚，最终业务语义反而混乱。
+        </p>
+        <p>
+          更稳的做法是把“订单状态和库存扣减”作为本地强一致事务，把“站内信和短信”放入事件或消息队列异步处理，并为失败补偿设计重试和告警。这样系统不会因为非核心副作用影响主链路，也更容易排查问题。
+        </p>
+
+        <figure class="article-figure">
+          <img src="../assets/java-change-cost.svg" alt="Java 项目变更成本曲线">
+          <figcaption>边界清晰的项目，规模增长后仍然可以控制变更成本；耦合失控的项目会在中后期突然变贵。</figcaption>
+        </figure>
+
+        <h2>四、测试要覆盖规则和链路，而不是追求数字</h2>
+        <p>
+          测试覆盖率高不等于项目可靠。真正有价值的测试，应该覆盖业务规则、关键异常、数据转换和跨模块链路。不要把时间浪费在对 getter/setter 或无业务价值的薄包装做机械测试。
+        </p>
+        <p>
+          我的建议是：核心规则写单元测试，关键用例写集成测试，外部依赖用契约或 Mock 明确边界。每修一个线上 Bug，都补一个能复现问题的测试。这样测试集会自然长成项目的安全网。
+        </p>
+
+        <h2>五、日志和异常要为排查服务</h2>
+        <p>
+          线上问题最怕两种日志：一种是什么都没有，另一种是全是废话。好的日志应该回答：谁在什么时候做了什么，关键输入是什么，失败在哪一层，是否能关联到 traceId 或业务单号。
+        </p>
+        <p>
+          异常处理也不要只会 catch 后打印。业务异常、参数异常、外部系统异常、不可恢复异常应该分层处理。用户看到的是清晰提示，工程师看到的是可定位证据，系统看到的是可统计指标。
+        </p>
+
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>坏味道</th>
+              <th>短期表现</th>
+              <th>长期后果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Service 互相随意调用</td>
+              <td>需求开发很快</td>
+              <td>循环依赖、事务边界混乱、修改影响不可预测</td>
+            </tr>
+            <tr>
+              <td>一个 DTO 到处复用</td>
+              <td>少写几个类</td>
+              <td>接口、页面、数据库字段被迫一起变化</td>
+            </tr>
+            <tr>
+              <td>异常统一吞掉</td>
+              <td>页面看起来不报错</td>
+              <td>线上问题没有证据，用户反馈变成唯一监控</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="note-block">
+          <p><strong>可维护性检查清单：</strong>新增需求前，先判断要改哪些模块；提交前，看事务范围是否过大；上线前，确认关键链路有日志、异常有分类、核心规则有测试。</p>
+        </div>
+
+        <h2>结论</h2>
+        <p>
+          Java 项目的高级感不是架构图画得复杂，而是每次需求变化都能从容落地。边界清晰、模型分离、事务克制、测试有效、日志可查，这五件事做好，项目就不会轻易失控。
+        </p>
+      </div>
+
+      <aside class="article-aside">
+        <strong>本文要点</strong>
+        <p>可维护性的本质，是让未来的修改成本可预测、可验证、可回滚。</p>
+        <div class="article-tags">
+          <span>Java</span>
+          <span>架构</span>
+          <span>事务</span>
+          <span>测试</span>
+        </div>
+      </aside>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Yunxi · Engineering Notes</span>
+    <a href="../">返回首页</a>
+  </footer>
+</body>
+</html>
