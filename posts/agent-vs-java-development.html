@@ -9,9 +9,10 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="../styles.css?v=20260528-luxe2">
+  <link rel="stylesheet" href="../styles.css?v=20260528-liquid1">
 </head>
 <body>
+  <div class="read-progress" aria-hidden="true"></div>
   <header class="site-header">
     <a class="brand" href="../">Yunxi</a>
     <nav class="nav" aria-label="主导航">
@@ -25,10 +26,10 @@
   <main class="article-shell">
     <article class="article">
       <div class="article-body">
-        <p class="eyebrow">2026-05-28 · Agent Engineering</p>
+        <p class="eyebrow">2026.04.12 · Agent Engineering</p>
         <h1>Agent 开发和传统 Java 开发有什么不同</h1>
         <p class="lead">
-          如果说传统 Java 开发是在构建一台稳定运行的业务机器，那么 Agent 开发是在设计一个会读上下文、会使用工具、会自我修正，也可能误判的工程协作者。两者都需要软件工程，但关注点完全不同。
+          如果说传统 Java 开发是在构建一台稳定运行的业务机器，那么 Agent 开发是在设计一个会读上下文、会使用工具、会自我修正，也可能误判的工程协作者。真正的差别不在 Prompt 写得漂不漂亮，而在你是否能把“一个资深开发者怎么工作”拆成可执行、可验证、可接管的流程。
         </p>
 
         <figure class="article-figure">
@@ -42,6 +43,9 @@
         </p>
         <p>
           Agent 系统的输入往往是自然语言目标、半结构化上下文和动态工具环境。它不是只执行一条固定代码路径，而是需要判断下一步该读文件、查文档、调用 API、运行测试，还是停下来问人。因此 Agent 工程的重点不是消灭不确定性，而是把不确定性关进可控边界里。
+        </p>
+        <p>
+          这件事在真实项目里非常明显。写 Java 接口时，我可以把需求压成“新增一个 POST /orders/{id}/cancel 接口，状态为 PAID 时禁止取消，状态为 CREATED 时回滚库存”。但让 Agent 修一个线上问题时，需求通常长这样：“这个接口今天突然 500，帮我看下”。这里没有明确入参，没有明确改哪个文件，也没有明确验收路径。Agent 必须先建立问题空间，再决定行动顺序。
         </p>
 
         <table class="code-table">
@@ -84,6 +88,27 @@
           Agent 开发里的需求还要转化成一套工作协议：任务目标是什么，必须读取哪些上下文，允许使用哪些工具，什么操作需要确认，失败后怎么回滚，什么时候必须停止。一个好的 Agent 指令，不是“帮我完成任务”，而是“用什么方式完成任务，并证明你完成得可信”。
         </p>
 
+        <div class="practice-panel">
+          <h3>一个可执行的 Agent 工作协议应该长这样</h3>
+          <p>这不是给模型看的漂亮话，而是把团队里的工程纪律写成运行规则。越具体，越能减少“看起来很努力但其实在乱试”的情况。</p>
+          <pre class="code-sample"><code>task:
+  goal: 修复 failing test，并说明根因
+  allowed_tools:
+    - read_file
+    - search_code
+    - apply_patch
+    - run_tests
+  required_steps:
+    - 先读取失败输出，记录具体断言或异常栈
+    - 检索被测接口、调用链和最近修改点
+    - 修改前读取目标文件当前内容
+    - 单次改动只解决一个根因
+    - 修改后运行能覆盖该问题的最小测试集
+  stop_rules:
+    - 涉及删除数据、覆盖配置、发布部署时必须停下确认
+    - 连续两次测试失败后必须重新定位，不允许盲改</code></pre>
+        </div>
+
         <div class="note-block">
           <p><strong>关键判断：</strong>Java 代码最怕隐式规则散落在各处；Agent 最怕隐式意图藏在人的脑子里。前者需要接口和测试，后者需要上下文、约束和验收标准。</p>
         </div>
@@ -108,6 +133,41 @@
         <p>
           因此，一个可靠的代码修复 Agent 至少要有三条规则：修改前必须读当前文件；跨库 API 必须查官方文档或项目内签名；修复后必须运行能证明问题消失的测试。这些规则看起来像流程约束，本质上是在把资深工程师的工作习惯显式化。
         </p>
+        <p>
+          我更愿意把 Agent 当作“会执行的结对开发者”，而不是“万能搜索框”。结对时你不会只看对方最后改出来的代码，你会看他是否读懂了失败用例、是否找到了正确边界、是否把无关改动排除掉。Agent 也一样，过程质量决定结果可信度。
+        </p>
+
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>任务阶段</th>
+              <th>Java 工程师会做什么</th>
+              <th>Agent 必须显式化什么</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>定位问题</td>
+              <td>看测试失败、日志、链路、最近提交</td>
+              <td>引用读取过的证据，说明为什么看这些文件</td>
+            </tr>
+            <tr>
+              <td>确定边界</td>
+              <td>判断是 controller、service、mapper 还是测试数据问题</td>
+              <td>禁止跨层乱改，先给出最小修改面</td>
+            </tr>
+            <tr>
+              <td>实施修复</td>
+              <td>改一处、跑一轮、复盘影响</td>
+              <td>记录改动原因、验证命令和剩余风险</td>
+            </tr>
+            <tr>
+              <td>交付结果</td>
+              <td>提交代码、说明根因、补测试</td>
+              <td>交付可复现证据，而不只是自然语言总结</td>
+            </tr>
+          </tbody>
+        </table>
 
         <figure class="article-figure">
           <img src="../assets/architecture-focus.svg" alt="Java 架构与 Agent 架构关注点对比图">
@@ -122,6 +182,25 @@
           Agent 测试要多一层：轨迹是否合理。比如它是否读取了正确文件，是否在修改前查看当前内容，是否在调用第三方 API 前查了官方文档，是否在测试失败后先定位根因而不是乱改。一个结果看似正确但过程不可控的 Agent，很难进入生产环境。
         </p>
 
+        <div class="practice-panel">
+          <h3>我会给代码 Agent 加的最小评测用例</h3>
+          <pre class="code-sample"><code>{
+  "case": "订单取消接口在库存不足时返回错误",
+  "repo_state": "已有一个失败的 OrderCancelServiceTest",
+  "expected_behavior": [
+    "先读取失败断言和 OrderCancelService 当前实现",
+    "只修改订单取消相关业务代码或测试数据",
+    "不得改全局异常处理来掩盖失败",
+    "运行 OrderCancelServiceTest 并报告结果"
+  ],
+  "fail_signal": [
+    "没有读测试直接改代码",
+    "修改无关配置",
+    "测试仍失败却宣称完成"
+  ]
+}</code></pre>
+        </div>
+
         <figure class="article-figure">
           <img src="../assets/testing-spectrum.svg" alt="传统测试与 Agent 测试重点对比图">
           <figcaption>Agent 的质量评估要覆盖结果、路径、权限和恢复能力。只看最后回答会漏掉真正的工程风险。</figcaption>
@@ -133,6 +212,17 @@
         </p>
         <p>
           对 Java 工程师来说，最值得迁移的能力不是语法，而是工程习惯：边界意识、测试意识、异常意识、可观测性意识。这些能力会直接决定 Agent 是一个炫技 Demo，还是一个真正能帮团队交付的工具。
+        </p>
+        <p>
+          未来更稀缺的不是“我会不会调用某个模型 API”，而是“我能不能把一个模糊目标改造成高质量工作流”。比如同样是“帮我重构支付模块”，普通 Agent 会开始批量改文件；靠谱的 Agent 会先问当前痛点是事务太大、状态流不清、测试缺失还是依赖方向混乱，再把改动拆成可验证的小步。这背后靠的不是模型魔法，而是工程师对风险和顺序的判断。
+        </p>
+
+        <h2>六、真实落地时，Agent 和 Java 往往是组合关系</h2>
+        <p>
+          一个成熟团队不会把核心交易链路交给 Agent 临场发挥。更现实的组合是：Java 服务继续承载确定性业务能力，Agent 负责围绕这些能力做分析、编排和辅助交付。例如让 Agent 阅读告警、关联日志、定位疑似变更、生成修复建议；真正的状态变更仍由经过测试和审计的 Java 服务执行。
+        </p>
+        <p>
+          这个组合很像“飞行员 + 自动驾驶”。自动化可以承担大量重复判断和辅助操作，但关键边界、不可逆动作、异常决策必须有清晰接管机制。越是高价值场景，越不能只相信最后输出，而要看它怎么得出结论。
         </p>
 
         <h2>结论：Java 提供稳定能力，Agent 提供协作杠杆</h2>
@@ -165,6 +255,6 @@
     <span>© 2026 Yunxi · Engineering Notes</span>
     <a href="../">返回首页</a>
   </footer>
-  <script src="../motion.js?v=20260528-luxe2"></script>
+  <script src="../motion.js?v=20260528-liquid1"></script>
 </body>
 </html>

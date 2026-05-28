@@ -9,9 +9,10 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="../styles.css?v=20260528-luxe2">
+  <link rel="stylesheet" href="../styles.css?v=20260528-liquid1">
 </head>
 <body>
+  <div class="read-progress" aria-hidden="true"></div>
   <header class="site-header">
     <a class="brand" href="../">Yunxi</a>
     <nav class="nav" aria-label="主导航">
@@ -25,10 +26,10 @@
   <main class="article-shell">
     <article class="article">
       <div class="article-body">
-        <p class="eyebrow">2026-05-28 · Java Architecture</p>
+        <p class="eyebrow">2026.04.18 · Java Architecture</p>
         <h1>Java 项目如何避免越写越乱</h1>
         <p class="lead">
-          一个 Java 项目开始变乱，通常不是因为用了 Spring Boot，也不是因为没有微服务，而是因为边界、数据流、事务和测试没有形成稳定的工程秩序。
+          一个 Java 项目开始变乱，通常不是因为用了 Spring Boot，也不是因为没有微服务，而是因为边界、数据流、事务和测试没有形成稳定的工程秩序。真正难的不是写出第一版功能，而是半年后还能低成本地改、敢上线、能排查。
         </p>
 
         <figure class="article-figure">
@@ -44,6 +45,21 @@
           边界的目标不是“分层好看”，而是让责任清晰。Controller 只处理协议和参数，Application Service 编排用例，Domain 或业务服务表达规则，Repository 负责持久化。哪怕项目不大，也要让每层知道自己不该做什么。
         </p>
 
+        <div class="practice-panel">
+          <h3>我更推荐的单体项目目录骨架</h3>
+          <p>项目小的时候先保持单体，但边界要像未来可以拆一样清楚。这样不会过早微服务化，也不会把所有东西塞进一个 service。</p>
+          <pre class="code-sample"><code>src/main/java/com/example/order
+├── api                 # Controller、Request、Response
+├── application         # 用例编排：取消订单、确认收货、退款申请
+├── domain              # 业务规则：订单状态机、金额校验、库存占用
+├── infrastructure      # DB、MQ、第三方支付、短信网关
+└── support             # 当前模块内部工具，不做跨模块万能工具箱</code></pre>
+        </div>
+
+        <p>
+          目录只是表象，关键是依赖方向：api 可以调用 application，application 可以调用 domain 和 infrastructure 接口，domain 不应该反过来依赖 controller、mapper 或外部网关。只要依赖方向守住，项目就不容易在需求压力下坍成一团。
+        </p>
+
         <h2>二、数据模型不要混用</h2>
         <p>
           Entity、DTO、VO、Command 混着用，是 Java 项目腐化的高发点。数据库实体被直接返回给前端，前端字段反过来影响数据库字段，接口为了兼容页面不断塞临时属性，最后一个类承载了三四种语义。
@@ -51,6 +67,22 @@
         <p>
           更稳的做法是：数据库 Entity 只表达持久化结构；DTO 表达接口传输；Command 表达一次业务动作；View Object 表达页面需要的展示结果。转换代码看起来多一点，但它换来的是边界清晰和演进自由。
         </p>
+
+        <div class="practice-panel">
+          <h3>不要让 Entity 穿透到接口层</h3>
+          <pre class="code-sample"><code>// 不推荐：数据库结构直接暴露给前端
+@GetMapping("/{id}")
+public OrderEntity detail(@PathVariable Long id) {
+    return orderRepository.findById(id).orElseThrow();
+}
+
+// 更稳：接口返回的是页面契约，数据库怎么改不影响前端
+@GetMapping("/{id}")
+public OrderDetailResponse detail(@PathVariable Long id) {
+    Order order = orderQueryService.getDetail(id);
+    return OrderDetailResponse.from(order);
+}</code></pre>
+        </div>
 
         <table class="code-table">
           <thead>
@@ -95,6 +127,23 @@
           更稳的做法是把“订单状态和库存扣减”作为本地强一致事务，把“站内信和短信”放入事件或消息队列异步处理，并为失败补偿设计重试和告警。这样系统不会因为非核心副作用影响主链路，也更容易排查问题。
         </p>
 
+        <div class="practice-panel">
+          <h3>事务边界可以这样拆</h3>
+          <pre class="code-sample"><code>@Transactional
+public void markPaid(PaySuccessCommand command) {
+    Order order = orderRepository.getByNo(command.orderNo());
+    order.markPaid(command.paidAt());
+    inventoryService.confirmDeduction(order.items());
+    orderEventRepository.save(OrderEvent.paid(order.id()));
+}
+
+// 由定时任务或 MQ 消费者异步处理，失败可以重试和告警
+public void handlePaidEvent(OrderPaidEvent event) {
+    messageService.sendStationNotice(event.orderId());
+    smsGateway.sendPaidMessage(event.mobile());
+}</code></pre>
+        </div>
+
         <figure class="article-figure">
           <img src="../assets/java-change-cost.svg" alt="Java 项目变更成本曲线">
           <figcaption>边界清晰的项目，规模增长后仍然可以控制变更成本；耦合失控的项目会在中后期突然变贵。</figcaption>
@@ -108,12 +157,69 @@
           我的建议是：核心规则写单元测试，关键用例写集成测试，外部依赖用契约或 Mock 明确边界。每修一个线上 Bug，都补一个能复现问题的测试。这样测试集会自然长成项目的安全网。
         </p>
 
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>测试类型</th>
+              <th>适合覆盖</th>
+              <th>一个真实例子</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>单元测试</td>
+              <td>状态机、金额计算、权限规则</td>
+              <td>订单已支付后不能取消，退款金额不能超过实付金额</td>
+            </tr>
+            <tr>
+              <td>集成测试</td>
+              <td>Service + Repository + 事务</td>
+              <td>支付成功后订单状态、库存流水、事件表必须同时落库</td>
+            </tr>
+            <tr>
+              <td>契约测试</td>
+              <td>第三方接口和内部 API</td>
+              <td>支付回调字段缺失时是否按约定返回失败</td>
+            </tr>
+            <tr>
+              <td>回归测试</td>
+              <td>线上 Bug 的最小复现</td>
+              <td>同一订单重复回调不能重复扣库存</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="practice-panel">
+          <h3>测试命名要让人一眼看懂业务意图</h3>
+          <pre class="code-sample"><code>@Test
+void should_not_cancel_order_when_order_has_been_paid() {
+    Order order = OrderFixture.paidOrder();
+
+    assertThatThrownBy(() -> order.cancel("用户取消"))
+        .isInstanceOf(BusinessException.class)
+        .hasMessageContaining("已支付订单不能取消");
+}</code></pre>
+        </div>
+
         <h2>五、日志和异常要为排查服务</h2>
         <p>
           线上问题最怕两种日志：一种是什么都没有，另一种是全是废话。好的日志应该回答：谁在什么时候做了什么，关键输入是什么，失败在哪一层，是否能关联到 traceId 或业务单号。
         </p>
         <p>
           异常处理也不要只会 catch 后打印。业务异常、参数异常、外部系统异常、不可恢复异常应该分层处理。用户看到的是清晰提示，工程师看到的是可定位证据，系统看到的是可统计指标。
+        </p>
+
+        <div class="practice-panel">
+          <h3>一条能救命的日志应该带业务主键</h3>
+          <pre class="code-sample"><code>log.info("order paid event created, orderNo={}, orderId={}, amount={}, traceId={}",
+    order.getOrderNo(),
+    order.getId(),
+    order.getPaidAmount(),
+    TraceContext.currentTraceId());</code></pre>
+        </div>
+
+        <p>
+          我最怕看到的日志是 `error happened`，其次是把整个对象无脑打出来。前者无法定位，后者可能泄露敏感信息。好的日志应该克制，但关键字段必须齐：业务单号、用户或租户标识、外部请求 ID、核心状态、失败原因。排查线上问题时，这些字段比一大段堆栈更值钱。
         </p>
 
         <table class="code-table">
@@ -147,6 +253,14 @@
           <p><strong>可维护性检查清单：</strong>新增需求前，先判断要改哪些模块；提交前，看事务范围是否过大；上线前，确认关键链路有日志、异常有分类、核心规则有测试。</p>
         </div>
 
+        <h2>六、不要一上来就“大重构”</h2>
+        <p>
+          真实项目里，最容易失败的重构不是技术难，而是范围失控。看到旧系统一团乱时，不要立刻宣布“我要重构整个订单模块”。更稳的方式是把重构绑在正在交付的需求上：这次改退款，就先把退款用例的入口、模型和测试补齐；下次改取消订单，再把取消链路整理出来。
+        </p>
+        <p>
+          我会优先做三种低风险改进：把重复判断提成领域方法，把穿透层级的数据模型隔离掉，把线上 Bug 固化成测试。这些改动不花哨，但能逐步降低未来需求的变更成本。
+        </p>
+
         <h2>结论</h2>
         <p>
           Java 项目的高级感不是架构图画得复杂，而是每次需求变化都能从容落地。边界清晰、模型分离、事务克制、测试有效、日志可查，这五件事做好，项目就不会轻易失控。
@@ -170,6 +284,6 @@
     <span>© 2026 Yunxi · Engineering Notes</span>
     <a href="../">返回首页</a>
   </footer>
-  <script src="../motion.js?v=20260528-luxe2"></script>
+  <script src="../motion.js?v=20260528-liquid1"></script>
 </body>
 </html>

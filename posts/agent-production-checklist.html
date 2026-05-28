@@ -9,9 +9,10 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="../styles.css?v=20260528-luxe2">
+  <link rel="stylesheet" href="../styles.css?v=20260528-liquid1">
 </head>
 <body>
+  <div class="read-progress" aria-hidden="true"></div>
   <header class="site-header">
     <a class="brand" href="../">Yunxi</a>
     <nav class="nav" aria-label="主导航">
@@ -25,10 +26,10 @@
   <main class="article-shell">
     <article class="article">
       <div class="article-body">
-        <p class="eyebrow">2026-05-28 · Agent Practice</p>
+        <p class="eyebrow">2026.05.01 · Agent Practice</p>
         <h1>Agent 工程落地清单</h1>
         <p class="lead">
-          一个 Agent 能演示，不代表它能交付。真正上线前，要回答六个问题：它能做什么，不能做什么，凭什么判断，如何验证，失败怎么办，谁来接管。
+          一个 Agent 能演示，不代表它能交付。真正上线前，要回答六个问题：它能做什么，不能做什么，凭什么判断，如何验证，失败怎么办，谁来接管。Demo 证明的是“模型有潜力”，生产证明的是“系统有边界”。
         </p>
 
         <figure class="article-figure">
@@ -44,6 +45,24 @@
           边界定义至少包含三项：输入是什么，允许做什么，完成标准是什么。没有完成标准的 Agent 很容易变成“看起来很努力，但不知道是否真的完成”的系统。
         </p>
 
+        <div class="practice-panel">
+          <h3>任务边界模板</h3>
+          <pre class="code-sample"><code>name: code-review-agent
+scope:
+  can_do:
+    - 阅读 PR diff 和关联文件
+    - 标出潜在 bug、回归风险、缺失测试
+    - 给出最小修改建议
+  cannot_do:
+    - 直接合并 PR
+    - 直接修改生产配置
+    - 基于猜测评价未读取的文件
+done_when:
+  - 每条发现都有文件位置和理由
+  - 严重级别可解释
+  - 明确说明没有验证到的风险</code></pre>
+        </div>
+
         <h2>二、权限必须最小化</h2>
         <p>
           Agent 可以调用工具后，权限就是第一风险。能读不代表能写，能写不代表能删除，能调用 API 不代表能操作生产数据。权限应该按任务拆分，而不是按模型能力一次性放开。
@@ -55,12 +74,48 @@
           <li>所有工具调用都要留下可追踪记录。</li>
         </ul>
 
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>工具</th>
+              <th>默认权限</th>
+              <th>需要审批的动作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>代码仓库</td>
+              <td>读取文件、查看 diff、运行测试</td>
+              <td>批量改文件、删除文件、推送分支、合并 PR</td>
+            </tr>
+            <tr>
+              <td>Shell</td>
+              <td>只读查询、构建、测试、格式化</td>
+              <td>删除、移动目录、修改全局环境、部署发布</td>
+            </tr>
+            <tr>
+              <td>数据库</td>
+              <td>只读查询脱敏数据</td>
+              <td>写入、删除、DDL、查询敏感字段</td>
+            </tr>
+            <tr>
+              <td>外部 API</td>
+              <td>读取文档、查询状态</td>
+              <td>发消息、扣费、创建真实订单、触达用户</td>
+            </tr>
+          </tbody>
+        </table>
+
         <h2>三、上下文要可信、够用、不过载</h2>
         <p>
           Agent 的很多错误不是模型“笨”，而是上下文错了。它读了旧文档、漏了关键配置、把示例当生产规则，都会导致错误决策。
         </p>
         <p>
           上下文工程要处理三件事：来源可信，版本明确，内容适量。不要把所有东西塞给模型，而是让它按任务检索必要信息，并在关键判断前引用证据。
+        </p>
+
+        <p>
+          真实落地时，我会把上下文分成三层：第一层是当前任务必须读取的硬上下文，比如失败日志、PR diff、接口文档；第二层是按需检索的软上下文，比如历史 issue、相关模块说明；第三层是禁止默认相信的背景信息，比如模型训练记忆、过期 Wiki、群聊里的一句口头约定。Agent 每次做关键判断，都应该说明它依据的是哪一层上下文。
         </p>
 
         <table class="code-table">
@@ -98,6 +153,20 @@
           关键原则是：高影响操作前必须读上下文，修改后必须验证，失败后必须先定位根因。否则 Agent 会像一个手很快但没有经验的新人，越忙越危险。
         </p>
 
+        <div class="practice-panel">
+          <h3>工具调用轨迹示例</h3>
+          <pre class="code-sample"><code>1. read_test_output
+   evidence: OrderCancelServiceTest 第 42 行断言失败
+2. search_code("cancel order stock deduction")
+   evidence: 找到 OrderCancelService 和 InventoryService
+3. read_file(OrderCancelService.java)
+   evidence: paid 状态未提前返回
+4. apply_patch
+   change: 只调整状态校验顺序
+5. run_tests("OrderCancelServiceTest")
+   result: passed</code></pre>
+        </div>
+
         <figure class="article-figure">
           <img src="../assets/agent-operating-model.svg" alt="Agent 工程运行模型图">
           <figcaption>工具只是能力入口，真正决定质量的是工具前后的判断、验证和接管机制。</figcaption>
@@ -110,6 +179,24 @@
         <p>
           评测不要只打一个最终分。更有价值的是分层记录：任务是否完成、是否读了正确上下文、是否调用了正确工具、是否产生不必要修改、失败时是否停止、解释是否可信。
         </p>
+
+        <div class="practice-panel">
+          <h3>一条真实评测记录可以这样落库</h3>
+          <pre class="code-sample"><code>{
+  "task_id": "eval-2026-05-01-017",
+  "task_type": "fix_failing_test",
+  "success": true,
+  "context_score": 0.92,
+  "tool_trace_score": 0.88,
+  "unnecessary_changes": 0,
+  "verification": "OrderCancelServiceTest passed",
+  "human_review": "accepted",
+  "cost": {
+    "duration_seconds": 214,
+    "tool_calls": 9
+  }
+}</code></pre>
+        </div>
 
         <table class="code-table">
           <thead>
@@ -151,6 +238,10 @@
           人工接管不是失败，而是安全设计。需求不明确、权限不足、测试失败、涉及生产数据、操作不可逆时，Agent 应该主动停下，把证据和建议交给人判断。
         </p>
 
+        <p>
+          我会特别关注“看起来成功但人工撤销”的任务。这个指标比单纯失败率更危险，因为它说明 Agent 可能在错误地自信。比如代码能编译、测试也过了，但改动把业务语义做偏了；或者生成的周报格式正确，但结论引用了旧数据。生产化 Agent 必须让这种问题可见。
+        </p>
+
         <h3>上线后应该看的指标</h3>
         <ul>
           <li>任务成功率：最终是否完成，而不是是否生成了回复。</li>
@@ -160,9 +251,44 @@
           <li>单位任务成本：每类任务消耗的 token、时间和外部 API 成本。</li>
         </ul>
 
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>接管触发器</th>
+              <th>Agent 应该交给人的内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>需求歧义</td>
+              <td>已知事实、冲突点、推荐选项和影响</td>
+            </tr>
+            <tr>
+              <td>验证失败</td>
+              <td>失败命令、错误摘要、已经尝试过的修复路径</td>
+            </tr>
+            <tr>
+              <td>高风险权限</td>
+              <td>即将执行的操作、影响范围、回滚方式</td>
+            </tr>
+            <tr>
+              <td>成本异常</td>
+              <td>当前消耗、卡住的位置、是否建议终止</td>
+            </tr>
+          </tbody>
+        </table>
+
         <div class="note-block">
           <p><strong>上线前最低清单：</strong>任务边界明确；权限最小化；上下文来源可信；工具调用有日志；核心任务有评测集；失败有重试、回滚或人工接管；成本和错误可观测。</p>
         </div>
+
+        <h2>七、从 Demo 到生产的推进顺序</h2>
+        <p>
+          不要第一天就让 Agent 接管完整业务流。我更推荐四步走：先做只读分析型 Agent，再开放低风险写操作；先在沙箱仓库跑，再接入真实仓库；先人工审核每次输出，再逐步放开低风险自动化；先看任务级指标，再决定是否扩大场景。
+        </p>
+        <p>
+          这套节奏看起来慢，但它能让团队知道风险在哪里。Agent 工程不是“赌模型突然变聪明”，而是不断收窄失败空间，把不确定任务变成可管理的工程过程。
+        </p>
 
         <h2>结论</h2>
         <p>
@@ -187,6 +313,6 @@
     <span>© 2026 Yunxi · Engineering Notes</span>
     <a href="../">返回首页</a>
   </footer>
-  <script src="../motion.js?v=20260528-luxe2"></script>
+  <script src="../motion.js?v=20260528-liquid1"></script>
 </body>
 </html>
