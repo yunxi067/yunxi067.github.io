@@ -25,6 +25,11 @@
         传统 Java 开发更像是在定义确定性的业务系统，而 Agent 开发更像是在设计一个会使用工具、会做判断、也可能犯错的协作者。
       </p>
 
+      <figure class="article-figure">
+        <img src="../assets/agent-flow.svg" alt="Agent 开发和传统 Java 开发的流程对比图">
+        <figcaption>Java 开发通常沿着稳定流程推进；Agent 开发更强调目标、上下文、工具和反馈构成的循环。</figcaption>
+      </figure>
+
       <h2>一、开发对象不一样</h2>
       <p>
         传统 Java 开发的核心对象通常是接口、类、服务、数据库表和消息队列。我们关心输入、输出、异常、事务和性能，代码路径相对确定。
@@ -65,6 +70,11 @@
         Agent 架构强调工具编排、上下文压缩、权限隔离、状态管理和人工接管。典型问题是“这个智能体如何在复杂任务中持续做对事，并且在不确定时安全停下”。
       </p>
 
+      <figure class="article-figure">
+        <img src="../assets/architecture-focus.svg" alt="Java 架构与 Agent 架构关注点对比图">
+        <figcaption>两类架构都服务于稳定交付，但稳定性的来源不同：Java 依赖确定性系统边界，Agent 依赖受控的智能协作边界。</figcaption>
+      </figure>
+
       <h2>六、工程师的角色变化</h2>
       <p>
         在传统 Java 开发中，工程师主要是代码实现者和系统维护者。你通过代码把业务规则固化下来。
@@ -74,6 +84,11 @@
       </p>
 
       <h2>结论</h2>
+      <figure class="article-figure">
+        <img src="../assets/testing-spectrum.svg" alt="传统测试与 Agent 测试重点对比图">
+        <figcaption>Agent 测试不能只看最终答案，还要检查它是否遵守了过程、权限和验证要求。</figcaption>
+      </figure>
+
       <p>
         Agent 开发不是替代 Java 开发，而是在传统软件工程之上增加了一层“可执行的智能协作”。底层服务仍然需要 Java 这样的稳定工程体系；而 Agent 更适合处理跨工具、跨文件、跨流程的复杂任务。
       </p>
