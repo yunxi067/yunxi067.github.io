@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yunxi 的技术博客，记录全栈开发、工程实践与项目复盘。">
-  <title>Yunxi | 技术博客</title>
+  <meta name="description" content="Yunxi 的高质量技术博客，聚焦 Java 工程、Agent 开发、系统设计与真实项目交付。">
+  <title>Yunxi | 工程研究笔记</title>
   <link rel="icon" href="/assets/site-icon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -15,8 +15,9 @@
   <header class="site-header">
     <a class="brand" href="/">Yunxi</a>
     <nav class="nav" aria-label="主导航">
+      <a href="#featured">精选</a>
       <a href="#posts">文章</a>
-      <a href="#projects">项目</a>
+      <a href="#method">方法论</a>
       <a href="#about">关于</a>
     </nav>
   </header>
@@ -24,69 +25,165 @@
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Full-stack notes</p>
-        <h1>把项目、代码和思考，沉淀成可复用的经验。</h1>
+        <p class="eyebrow">Engineering Notes / Since 2026</p>
+        <h1>写给真正要把系统做成的人。</h1>
         <p class="lead">
-          这里记录全栈开发、工程效率、部署实践与项目复盘。先保持简单，持续迭代。
+          这里不追热点词，也不堆模板话。Yunxi 的博客关注 Java 后端、Agent 工程化、全栈交付和真实项目复盘：怎么拆问题、怎么做取舍、怎么让系统长期可维护。
         </p>
         <div class="hero-actions">
-          <a class="button primary" href="#posts">阅读文章</a>
-          <a class="button secondary" href="https://github.com/yunxi067">GitHub</a>
+          <a class="button primary" href="#featured">进入精选文章</a>
+          <a class="button secondary" href="https://github.com/yunxi067">查看 GitHub</a>
+        </div>
+        <div class="hero-stats" aria-label="博客重点">
+          <div class="stat">
+            <strong>Java</strong>
+            <span>系统稳定性与可维护性</span>
+          </div>
+          <div class="stat">
+            <strong>Agent</strong>
+            <span>工具编排与工程边界</span>
+          </div>
+          <div class="stat">
+            <strong>Delivery</strong>
+            <span>从想法到上线的闭环</span>
+          </div>
         </div>
       </div>
-      <aside class="signal" aria-label="博客状态">
-        <span>Now building</span>
-        <strong>GitHub Pages</strong>
-        <p>Static, fast, and easy to maintain.</p>
+      <aside class="signal" aria-label="博客定位">
+        <img src="assets/hero-console.svg" alt="Yunxi 工程研究控制台视觉">
       </aside>
     </section>
 
-    <section id="posts" class="section">
-      <div class="section-heading">
-        <p class="eyebrow">Latest</p>
-        <h2>最新文章</h2>
-      </div>
-      <article class="post-card">
-        <div>
-          <p class="post-meta">2026-05-28 · Agent Engineering</p>
-          <h3><a href="posts/agent-vs-java-development.html">Agent 开发和传统 Java 开发有什么不同</a></h3>
-          <p>从工程目标、开发流程、测试方式和架构思维，对比 Agent 开发与传统 Java 开发的差异。</p>
+    <div class="page-panel">
+      <section id="featured" class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Featured</p>
+            <h2>精选阅读</h2>
+          </div>
+          <p>先从这些文章开始。它们覆盖 Agent 开发、Java 可维护性、项目上线三条主线，也是这个博客后续内容的基础。</p>
         </div>
-        <a class="read-link" href="posts/agent-vs-java-development.html" aria-label="阅读 Agent 开发和传统 Java 开发有什么不同">阅读</a>
-      </article>
-      <article class="post-card">
-        <div>
-          <p class="post-meta">2026-05-27 · GitHub Pages</p>
-          <h3><a href="posts/hello.html">第一篇：博客上线记录</a></h3>
-          <p>记录这个静态博客如何从一个空仓库开始，发布到 GitHub Pages。</p>
+
+        <div class="featured-grid">
+          <article class="feature-card">
+            <div>
+              <p class="post-meta">2026-05-28 · Agent Engineering</p>
+              <h3><a href="posts/agent-vs-java-development.html">Agent 开发和传统 Java 开发有什么不同</a></h3>
+              <p>不是“会不会写 Prompt”的差别，而是确定性系统和概率型协作者之间的工程范式差异。</p>
+              <img class="card-art" src="assets/agent-operating-model.svg" alt="Agent 工程运行模型缩略图">
+              <div class="tag-row">
+                <span>工具编排</span>
+                <span>上下文工程</span>
+                <span>风险边界</span>
+              </div>
+            </div>
+            <a class="read-link" href="posts/agent-vs-java-development.html">阅读全文</a>
+          </article>
+
+          <div class="side-stack">
+            <article class="insight-card">
+              <p class="post-meta">2026-05-28 · Java Architecture</p>
+              <h3><a href="posts/java-maintainability.html">Java 项目如何避免越写越乱</a></h3>
+              <p>从分层、事务、边界、测试和日志五个角度，建立可维护项目的基本盘。</p>
+              <img class="card-art" src="assets/java-maintainability-map.svg" alt="Java 可维护性地图缩略图">
+              <a class="read-link" href="posts/java-maintainability.html">阅读全文</a>
+            </article>
+            <article class="insight-card">
+              <p class="post-meta">2026-05-28 · Agent Practice</p>
+              <h3><a href="posts/agent-production-checklist.html">Agent 工程落地清单</a></h3>
+              <p>把一个 Agent 从演示玩具推进到可交付工具，需要补齐哪些工程护栏。</p>
+              <img class="card-art" src="assets/agent-release-gate.svg" alt="Agent 上线闸门缩略图">
+              <a class="read-link" href="posts/agent-production-checklist.html">阅读全文</a>
+            </article>
+          </div>
         </div>
-        <a class="read-link" href="posts/hello.html" aria-label="阅读第一篇博客">阅读</a>
-      </article>
-    </section>
+      </section>
 
-    <section id="projects" class="section split">
-      <div>
-        <p class="eyebrow">Work</p>
-        <h2>项目方向</h2>
-      </div>
-      <div class="project-list">
-        <p>全栈 Web 应用</p>
-        <p>自动化工具</p>
-        <p>工程化部署</p>
-      </div>
-    </section>
+      <section id="posts" class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Library</p>
+            <h2>文章库</h2>
+          </div>
+          <p>文章会持续围绕一个问题展开：怎样把技术能力转化成稳定、可交付、可复盘的工程结果。</p>
+        </div>
 
-    <section id="about" class="section about">
-      <p class="eyebrow">About</p>
-      <h2>关于 Yunxi</h2>
-      <p>
-        关注实际业务价值、代码可维护性和稳定交付。这个博客会作为公开笔记本，记录学习、构建和复盘。
-      </p>
-    </section>
+        <div class="post-list">
+          <article class="post-card">
+            <p class="post-meta">Agent Engineering</p>
+            <div>
+              <h3><a href="posts/agent-vs-java-development.html">Agent 开发和传统 Java 开发有什么不同</a></h3>
+              <p>对比开发对象、测试方式、架构重点和工程师角色变化。</p>
+            </div>
+            <a class="read-link" href="posts/agent-vs-java-development.html">阅读</a>
+          </article>
+          <article class="post-card">
+            <p class="post-meta">Java Architecture</p>
+            <div>
+              <h3><a href="posts/java-maintainability.html">Java 项目如何避免越写越乱</a></h3>
+              <p>可维护性的核心不是多写抽象，而是让边界、数据和变更成本可控。</p>
+            </div>
+            <a class="read-link" href="posts/java-maintainability.html">阅读</a>
+          </article>
+          <article class="post-card">
+            <p class="post-meta">Agent Practice</p>
+            <div>
+              <h3><a href="posts/agent-production-checklist.html">Agent 工程落地清单</a></h3>
+              <p>从工具权限、上下文质量、失败恢复到上线观测，一次性梳理关键检查项。</p>
+            </div>
+            <a class="read-link" href="posts/agent-production-checklist.html">阅读</a>
+          </article>
+          <article class="post-card">
+            <p class="post-meta">GitHub Pages</p>
+            <div>
+              <h3><a href="posts/hello.html">博客上线记录</a></h3>
+              <p>记录这个静态博客如何从空仓库发布到 GitHub Pages。</p>
+            </div>
+            <a class="read-link" href="posts/hello.html">阅读</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="method" class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Method</p>
+            <h2>写作方法论</h2>
+          </div>
+          <p>每篇文章尽量避免“概念复述”，而是输出工程师能直接拿走的判断框架。</p>
+        </div>
+        <div class="method-grid">
+          <div class="method">
+            <b>先给边界</b>
+            <span>明确适用场景、反例和不该做的事情。</span>
+          </div>
+          <div class="method">
+            <b>再讲取舍</b>
+            <span>技术方案没有绝对好坏，只有成本、风险和上下文。</span>
+          </div>
+          <div class="method">
+            <b>补齐验证</b>
+            <span>上线前看测试，上线后看日志、指标和反馈。</span>
+          </div>
+          <div class="method">
+            <b>沉淀清单</b>
+            <span>把一次经验变成下次可复用的检查项。</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section about">
+        <p class="eyebrow">About</p>
+        <h2>关于 Yunxi</h2>
+        <p>
+          我更关心技术如何真的落地：一段代码能不能维护，一个系统能不能解释，一个 Agent 能不能在不确定的任务里安全工作。这个博客会持续记录全栈开发、Java 后端、Agent 工程化和项目复盘。
+        </p>
+      </section>
+    </div>
   </main>
 
   <footer class="footer">
-    <span>© 2026 Yunxi</span>
+    <span>© 2026 Yunxi · Engineering Notes</span>
     <a href="https://github.com/yunxi067/yunxi067.github.io">Repository</a>
   </footer>
 </body>
