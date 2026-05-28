@@ -32,6 +32,7 @@ body {
   color: var(--paper);
   font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "Microsoft YaHei", serif;
   line-height: 1.75;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -108,28 +109,29 @@ button:focus-visible {
 }
 
 main {
+  width: min(var(--max), calc(100vw - 48px));
   max-width: var(--max);
   margin: 0 auto;
-  padding: 0 24px 84px;
+  padding: 0 0 84px;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: clamp(36px, 6vw, 78px);
-  min-height: 690px;
+  grid-template-columns: minmax(0, 0.96fr) minmax(320px, 0.72fr);
+  gap: clamp(40px, 6vw, 86px);
+  min-height: 560px;
   align-items: center;
-  padding: 54px 0 86px;
+  padding: 46px 0 56px;
   border-top: 1px solid var(--line-dark);
 }
 
 .hero h1 {
-  max-width: 860px;
+  max-width: 760px;
   margin: 0;
   color: var(--paper);
-  font-size: clamp(48px, 7vw, 96px);
+  font-size: clamp(44px, 6.2vw, 82px);
   font-weight: 900;
-  line-height: 1.02;
+  line-height: 1.08;
   letter-spacing: 0;
   animation: rise-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 80ms both;
 }
@@ -191,28 +193,145 @@ main {
 
 .signal {
   align-self: stretch;
-  overflow: hidden;
-  min-height: 430px;
-  padding: 0;
+  min-width: 0;
+  min-height: 440px;
+  padding: 26px;
   background:
     linear-gradient(180deg, rgba(251, 247, 237, 0.12), rgba(251, 247, 237, 0.04)),
     linear-gradient(135deg, rgba(47, 111, 94, 0.34), rgba(184, 102, 59, 0.14));
   border: 1px solid var(--line-dark);
-  border-radius: 8px;
+  border-radius: 28px;
   animation: panel-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms both;
 }
 
-.signal img {
-  display: block;
-  width: 100%;
+.signal-inner {
+  position: relative;
+  overflow: hidden;
   height: 100%;
-  object-fit: contain;
-  transform: scale(0.98);
-  transition: transform 500ms ease;
+  min-height: 388px;
+  padding: clamp(26px, 4vw, 42px);
+  background: rgba(15, 23, 19, 0.7);
+  border: 1px solid rgba(251, 247, 237, 0.12);
+  border-radius: 22px;
+  isolation: isolate;
 }
 
-.signal:hover img {
-  transform: scale(1);
+.signal-inner::before,
+.signal-inner::after {
+  position: absolute;
+  border: 1px solid rgba(216, 173, 102, 0.22);
+  border-radius: 50%;
+  content: "";
+}
+
+.signal-inner::before {
+  right: -120px;
+  bottom: -130px;
+  width: 360px;
+  height: 360px;
+  animation: slow-spin 18s linear infinite;
+}
+
+.signal-inner::after {
+  right: 34px;
+  bottom: 42px;
+  width: 190px;
+  height: 190px;
+  border-color: rgba(47, 111, 94, 0.34);
+  animation: slow-spin 14s linear infinite reverse;
+}
+
+.signal-kicker {
+  margin: 0;
+  color: var(--gold);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.signal h2 {
+  max-width: 360px;
+  margin: 22px 0 0;
+  color: var(--paper);
+  font-size: clamp(34px, 4vw, 50px);
+  line-height: 1.08;
+}
+
+.signal-copy {
+  max-width: 340px;
+  margin: 24px 0 0;
+  color: rgba(251, 247, 237, 0.72);
+}
+
+.orbit-map {
+  position: relative;
+  width: min(320px, 78vw);
+  height: 220px;
+  margin-top: 34px;
+}
+
+.orbit-core,
+.orbit-node {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-weight: 900;
+}
+
+.orbit-core {
+  left: 108px;
+  top: 66px;
+  width: 86px;
+  height: 86px;
+  background: var(--paper);
+  color: var(--bg);
+  font-size: 42px;
+  box-shadow: 0 0 0 1px rgba(251, 247, 237, 0.3), 0 18px 60px rgba(0, 0, 0, 0.28);
+}
+
+.orbit-node {
+  min-width: 86px;
+  height: 38px;
+  padding: 0 14px;
+  background: rgba(251, 247, 237, 0.08);
+  border: 1px solid rgba(251, 247, 237, 0.16);
+  color: var(--paper);
+  font-size: 13px;
+}
+
+.node-java {
+  left: 0;
+  top: 20px;
+}
+
+.node-agent {
+  right: 0;
+  top: 38px;
+}
+
+.node-delivery {
+  left: 58px;
+  bottom: 12px;
+}
+
+.motion-ready .orbit-core {
+  animation: pulse-core 3.8s ease-in-out infinite;
+}
+
+.motion-ready .orbit-node {
+  animation: float-node 4.8s ease-in-out infinite;
+}
+
+.motion-ready .node-agent {
+  animation-delay: 500ms;
+}
+
+.motion-ready .node-delivery {
+  animation-delay: 950ms;
 }
 
 .hero-stats {
@@ -244,13 +363,13 @@ main {
 
 .page-panel {
   margin: 0 calc(50% - 50vw);
-  padding: 84px max(24px, calc((100vw - var(--max)) / 2 + 24px));
+  padding: 64px max(24px, calc((100vw - var(--max)) / 2 + 24px));
   background: var(--paper);
   color: var(--ink);
 }
 
 .section {
-  padding: 78px 0;
+  padding: 68px 0;
   border-bottom: 1px solid rgba(216, 203, 183, 0.78);
 }
 
@@ -497,9 +616,8 @@ main {
   height: 3px;
   background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--gold));
   transform-origin: left;
-  animation: reading-progress linear both;
-  animation-timeline: scroll(root);
   content: "";
+  transform: scaleX(0);
 }
 
 .article {
@@ -560,9 +678,6 @@ main {
 
 .article-figure {
   margin: 42px 0;
-  animation: fade-in linear both;
-  animation-timeline: view();
-  animation-range: entry 8% cover 28%;
 }
 
 .article-figure img {
@@ -725,6 +840,50 @@ main {
   }
 }
 
+@keyframes slow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-core {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+@keyframes float-node {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.motion-ready .feature-card,
+.motion-ready .insight-card,
+.motion-ready .post-card,
+.motion-ready .method,
+.motion-ready .article h2,
+.motion-ready .article-figure,
+.motion-ready .code-table,
+.motion-ready .note-block {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1), transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.motion-ready .is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -773,6 +932,18 @@ main {
   .hero {
     min-height: auto;
     padding-top: 38px;
+  }
+
+  main {
+    width: min(100% - 32px, var(--max));
+  }
+
+  .signal {
+    padding: 16px;
+  }
+
+  .signal-inner {
+    min-height: 360px;
   }
 
   .hero-stats,
