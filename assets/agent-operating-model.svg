@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Agent 工程运行模型</title>
+  <desc id="desc">展示 Agent 从目标进入，到上下文、计划、工具、验证、人工接管的完整运行闭环。</desc>
+  <rect width="1280" height="720" rx="34" fill="#fbf7ed"/>
+  <rect x="42" y="42" width="1196" height="636" rx="28" fill="#fffaf0" stroke="#d8cbb7" stroke-width="2"/>
+  <text x="82" y="105" fill="#1d211c" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="34" font-weight="800">Agent 工程运行模型</text>
+  <text x="82" y="144" fill="#6f746d" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="18">真正可交付的 Agent，不是一次模型调用，而是一条带边界、证据和回滚的任务链。</text>
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif">
+    <g fill="#f7f4ed" stroke="#2f6f5e" stroke-width="2">
+      <rect x="88" y="244" width="164" height="78" rx="10"/>
+      <rect x="308" y="244" width="164" height="78" rx="10"/>
+      <rect x="528" y="244" width="164" height="78" rx="10"/>
+      <rect x="748" y="244" width="164" height="78" rx="10"/>
+      <rect x="968" y="244" width="164" height="78" rx="10"/>
+    </g>
+    <g fill="#1d211c" font-size="19" font-weight="800" text-anchor="middle">
+      <text x="170" y="291">目标</text>
+      <text x="390" y="291">上下文</text>
+      <text x="610" y="291">计划</text>
+      <text x="830" y="291">工具</text>
+      <text x="1050" y="291">验证</text>
+    </g>
+    <g fill="#6f746d" font-size="14" text-anchor="middle">
+      <text x="170" y="372">任务边界、成功标准</text>
+      <text x="390" y="372">文件、文档、状态、历史</text>
+      <text x="610" y="372">步骤、风险、检查点</text>
+      <text x="830" y="372">Shell、MCP、API、浏览器</text>
+      <text x="1050" y="372">测试、diff、日志、结果</text>
+    </g>
+    <g stroke="#2f6f5e" stroke-width="3" fill="none" marker-end="url(#arrow)">
+      <path d="M252 283h50"/>
+      <path d="M472 283h50"/>
+      <path d="M692 283h50"/>
+      <path d="M912 283h50"/>
+      <path d="M1050 322c0 92-160 132-440 132-274 0-420-40-440-128"/>
+    </g>
+    <rect x="350" y="464" width="580" height="108" rx="14" fill="#14221b"/>
+    <text x="640" y="512" fill="#fbf7ed" font-size="22" font-weight="800" text-anchor="middle">人工接管与权限护栏</text>
+    <text x="640" y="546" fill="#d8cbb7" font-size="16" text-anchor="middle">高风险操作、需求不明确、验证失败、权限不足时必须停下或升级处理。</text>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#2f6f5e"/>
+    </marker>
+  </defs>
+</svg>
