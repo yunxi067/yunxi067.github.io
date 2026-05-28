@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Agent 上线闸门</title>
+  <desc id="desc">展示 Agent 从 Demo 到生产上线需要经过权限、上下文、工具、评测、监控五道闸门。</desc>
+  <rect width="1280" height="720" rx="34" fill="#fbf7ed"/>
+  <rect x="42" y="42" width="1196" height="636" rx="28" fill="#fffaf0" stroke="#d8cbb7" stroke-width="2"/>
+  <text x="82" y="108" fill="#1d211c" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="34" font-weight="800">Agent 从 Demo 到生产的五道闸门</text>
+  <text x="82" y="148" fill="#6f746d" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="18">能跑一次不是上线标准；可控、可观测、可回滚才是上线标准。</text>
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif">
+    <line x1="150" y1="360" x2="1130" y2="360" stroke="#d8cbb7" stroke-width="10" stroke-linecap="round"/>
+    <g fill="#14221b">
+      <circle cx="190" cy="360" r="38"/>
+      <circle cx="410" cy="360" r="38"/>
+      <circle cx="630" cy="360" r="38"/>
+      <circle cx="850" cy="360" r="38"/>
+      <circle cx="1070" cy="360" r="38"/>
+    </g>
+    <g fill="#fbf7ed" font-size="20" font-weight="900" text-anchor="middle">
+      <text x="190" y="367">1</text>
+      <text x="410" y="367">2</text>
+      <text x="630" y="367">3</text>
+      <text x="850" y="367">4</text>
+      <text x="1070" y="367">5</text>
+    </g>
+    <g fill="#1d211c" font-size="21" font-weight="800" text-anchor="middle">
+      <text x="190" y="460">权限</text>
+      <text x="410" y="460">上下文</text>
+      <text x="630" y="460">工具</text>
+      <text x="850" y="460">评测</text>
+      <text x="1070" y="460">监控</text>
+    </g>
+    <g fill="#6f746d" font-size="15" text-anchor="middle">
+      <text x="190" y="494">最小权限、危险操作确认</text>
+      <text x="410" y="494">来源可信、版本清楚</text>
+      <text x="630" y="494">失败可恢复、输出可验证</text>
+      <text x="850" y="494">任务集、轨迹、回归测试</text>
+      <text x="1070" y="494">日志、成本、人工接管</text>
+    </g>
+    <rect x="166" y="218" width="928" height="58" rx="29" fill="#f7f4ed" stroke="#2f6f5e" stroke-width="2"/>
+    <text x="630" y="255" fill="#2f6f5e" font-size="20" font-weight="800" text-anchor="middle">上线标准 = 结果质量 × 过程可控 × 风险可回收</text>
+  </g>
+</svg>
