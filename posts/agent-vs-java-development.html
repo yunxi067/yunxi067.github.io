@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="从工程目标、开发流程、测试方式和架构思维对比 Agent 开发与传统 Java 开发的差异。">
+  <meta name="description" content="从工程目标、开发对象、测试方式、架构边界和团队协作方式，系统对比 Agent 开发与传统 Java 开发。">
   <title>Agent 开发和传统 Java 开发有什么不同 | Yunxi</title>
   <link rel="icon" href="/assets/site-icon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="any">
@@ -15,95 +15,154 @@
   <header class="site-header">
     <a class="brand" href="../">Yunxi</a>
     <nav class="nav" aria-label="主导航">
+      <a href="../#featured">精选</a>
       <a href="../#posts">文章</a>
-      <a href="../#projects">项目</a>
+      <a href="../#method">方法论</a>
       <a href="../#about">关于</a>
     </nav>
   </header>
 
-  <main>
+  <main class="article-shell">
     <article class="article">
-      <p class="eyebrow">2026-05-28 · Agent Engineering</p>
-      <h1>Agent 开发和传统 Java 开发有什么不同</h1>
-      <p class="lead">
-        传统 Java 开发更像是在定义确定性的业务系统，而 Agent 开发更像是在设计一个会使用工具、会做判断、也可能犯错的协作者。
-      </p>
+      <div class="article-body">
+        <p class="eyebrow">2026-05-28 · Agent Engineering</p>
+        <h1>Agent 开发和传统 Java 开发有什么不同</h1>
+        <p class="lead">
+          如果说传统 Java 开发是在构建一台稳定运行的业务机器，那么 Agent 开发是在设计一个会读上下文、会使用工具、会自我修正，也可能误判的工程协作者。两者都需要软件工程，但关注点完全不同。
+        </p>
 
-      <figure class="article-figure">
-        <img src="../assets/agent-flow.svg" alt="Agent 开发和传统 Java 开发的流程对比图">
-        <figcaption>Java 开发通常沿着稳定流程推进；Agent 开发更强调目标、上下文、工具和反馈构成的循环。</figcaption>
-      </figure>
+        <figure class="article-figure">
+          <img src="../assets/agent-operating-model.svg" alt="Agent 工程运行模型图">
+          <figcaption>Agent 开发的核心不是模型本身，而是围绕模型建立上下文、工具、验证和人工接管的闭环。</figcaption>
+        </figure>
 
-      <h2>一、开发对象不一样</h2>
-      <p>
-        传统 Java 开发的核心对象通常是接口、类、服务、数据库表和消息队列。我们关心输入、输出、异常、事务和性能，代码路径相对确定。
-      </p>
-      <p>
-        Agent 开发的核心对象则是目标、上下文、工具、记忆、权限和反馈回路。你不只是写一个函数，而是在规定一个智能体如何理解任务、什么时候调用工具、失败后如何修正，以及哪些事情绝对不能做。
-      </p>
+        <h2>一、Java 开发解决确定性，Agent 开发管理不确定性</h2>
+        <p>
+          Java 后端系统的理想状态是稳定、可预测、可复现。接口入参明确，数据库事务明确，异常分支明确，测试用例可以把关键路径固定下来。工程师关心的是：这个服务能不能在大量请求下稳定地完成业务规则。
+        </p>
+        <p>
+          Agent 系统的输入往往是自然语言目标、半结构化上下文和动态工具环境。它不是只执行一条固定代码路径，而是需要判断下一步该读文件、查文档、调用 API、运行测试，还是停下来问人。因此 Agent 工程的重点不是消灭不确定性，而是把不确定性关进可控边界里。
+        </p>
 
-      <h2>二、确定性和不确定性的比例不同</h2>
-      <p>
-        Java 系统追求稳定、可预测、可复现。只要输入相同、状态相同，输出就应该基本一致。线上问题通常通过日志、链路追踪、断点和测试来定位。
-      </p>
-      <p>
-        Agent 系统会引入模型推理，天然存在不确定性。同一句需求，模型可能选择不同的步骤；同一个工具失败，模型也可能采取不同的补救方式。因此 Agent 开发必须把“不确定性”当成系统设计的一部分，而不是上线后才处理的异常。
-      </p>
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>传统 Java 开发</th>
+              <th>Agent 开发</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>核心对象</td>
+              <td>类、接口、服务、数据库表、消息队列</td>
+              <td>目标、上下文、工具、权限、任务轨迹</td>
+            </tr>
+            <tr>
+              <td>主要风险</td>
+              <td>逻辑错误、事务不一致、性能瓶颈、并发问题</td>
+              <td>幻觉、越权、上下文误读、错误工具调用、不可复现</td>
+            </tr>
+            <tr>
+              <td>测试重点</td>
+              <td>输入输出是否正确，链路是否稳定</td>
+              <td>结果是否正确，过程是否遵守边界，失败是否可恢复</td>
+            </tr>
+            <tr>
+              <td>上线标准</td>
+              <td>功能通过测试，性能和可观测性达标</td>
+              <td>任务成功率、轨迹质量、权限护栏、人工接管机制达标</td>
+            </tr>
+          </tbody>
+        </table>
 
-      <h2>三、需求表达方式不同</h2>
-      <p>
-        Java 开发里，需求最后会落成接口契约、实体模型、流程图和代码实现。表达越具体，代码越容易稳定。
-      </p>
-      <p>
-        Agent 开发里，需求还要进一步变成可执行的行为边界：任务目标是什么，哪些上下文必须读取，工具调用顺序如何，遇到权限、网络、测试失败时怎么处理，什么时候必须停下来问人。好的 Agent 指令不是一句“帮我做完”，而是一套可运行的工程协议。
-      </p>
+        <h2>二、需求表达从“接口契约”变成“工作协议”</h2>
+        <p>
+          在 Java 项目里，一个需求通常会落到 API、实体模型、数据库字段、流程状态和异常处理。需求越明确，代码越好写；契约越稳定，协作成本越低。
+        </p>
+        <p>
+          Agent 开发里的需求还要转化成一套工作协议：任务目标是什么，必须读取哪些上下文，允许使用哪些工具，什么操作需要确认，失败后怎么回滚，什么时候必须停止。一个好的 Agent 指令，不是“帮我完成任务”，而是“用什么方式完成任务，并证明你完成得可信”。
+        </p>
 
-      <h2>四、测试重点不同</h2>
-      <p>
-        传统 Java 项目常见测试包括单元测试、集成测试、接口测试和压测。它们验证的是代码逻辑是否符合预期。
-      </p>
-      <p>
-        Agent 项目除了测试工具函数，还要测试任务轨迹：是否读了正确文件，是否遵守权限，是否在修改前做验证，是否能从失败中恢复，是否会产生幻觉。换句话说，Agent 的测试不仅看结果，还要看过程是否可靠。
-      </p>
+        <div class="note-block">
+          <p><strong>关键判断：</strong>Java 代码最怕隐式规则散落在各处；Agent 最怕隐式意图藏在人的脑子里。前者需要接口和测试，后者需要上下文、约束和验收标准。</p>
+        </div>
 
-      <h2>五、架构思维不同</h2>
-      <p>
-        Java 架构强调分层、边界、事务一致性、扩展性和可观测性。典型问题是“这个服务如何稳定支撑业务流量”。
-      </p>
-      <p>
-        Agent 架构强调工具编排、上下文压缩、权限隔离、状态管理和人工接管。典型问题是“这个智能体如何在复杂任务中持续做对事，并且在不确定时安全停下”。
-      </p>
+        <h2>三、工具调用让 Agent 更强，也让风险放大</h2>
+        <p>
+          Agent 一旦可以调用 shell、浏览器、数据库、MCP 服务或代码编辑器，它就不再只是“聊天模型”。它具备了改变外部世界的能力。能力越强，权限设计越重要。
+        </p>
+        <p>
+          传统 Java 服务的权限通常由系统边界控制，例如接口鉴权、数据库账号、服务间 token。Agent 的权限还要考虑“什么时候允许调用工具”“工具调用前是否需要读上下文”“调用结果是否必须验证”。这更像是给一个初级工程师制定工作守则，而不是单纯开放一个 API。
+        </p>
 
-      <figure class="article-figure">
-        <img src="../assets/architecture-focus.svg" alt="Java 架构与 Agent 架构关注点对比图">
-        <figcaption>两类架构都服务于稳定交付，但稳定性的来源不同：Java 依赖确定性系统边界，Agent 依赖受控的智能协作边界。</figcaption>
-      </figure>
+        <figure class="article-figure">
+          <img src="../assets/agent-flow.svg" alt="Agent 开发和传统 Java 开发的流程对比图">
+          <figcaption>Java 更接近流水线，Agent 更接近循环。循环里的每一步都需要证据和边界。</figcaption>
+        </figure>
 
-      <h2>六、工程师的角色变化</h2>
-      <p>
-        在传统 Java 开发中，工程师主要是代码实现者和系统维护者。你通过代码把业务规则固化下来。
-      </p>
-      <p>
-        在 Agent 开发中，工程师更像系统设计者、流程教练和风险控制者。你不只写代码，还要设计智能体的工作方式：它如何拆任务、如何检索上下文、如何调用工具、如何验证结果，以及如何把工作过程交代清楚。
-      </p>
+        <h3>真实场景：让 Agent 修复一个接口测试失败</h3>
+        <p>
+          传统 Java 工程师会先看失败用例、查日志、定位 controller/service/repository 的责任边界，再修改代码并跑回归测试。Agent 也应该遵守同样路径：先读取失败输出，再检索相关代码，确认接口契约和数据准备，然后提出最小修改。区别在于，Agent 需要被明确禁止“看到错误就猜原因直接改”。
+        </p>
+        <p>
+          因此，一个可靠的代码修复 Agent 至少要有三条规则：修改前必须读当前文件；跨库 API 必须查官方文档或项目内签名；修复后必须运行能证明问题消失的测试。这些规则看起来像流程约束，本质上是在把资深工程师的工作习惯显式化。
+        </p>
 
-      <h2>结论</h2>
-      <figure class="article-figure">
-        <img src="../assets/testing-spectrum.svg" alt="传统测试与 Agent 测试重点对比图">
-        <figcaption>Agent 测试不能只看最终答案，还要检查它是否遵守了过程、权限和验证要求。</figcaption>
-      </figure>
+        <figure class="article-figure">
+          <img src="../assets/architecture-focus.svg" alt="Java 架构与 Agent 架构关注点对比图">
+          <figcaption>Agent 架构要补上传统服务架构没有覆盖的部分：上下文、工具、权限和人工接管。</figcaption>
+        </figure>
 
-      <p>
-        Agent 开发不是替代 Java 开发，而是在传统软件工程之上增加了一层“可执行的智能协作”。底层服务仍然需要 Java 这样的稳定工程体系；而 Agent 更适合处理跨工具、跨文件、跨流程的复杂任务。
-      </p>
-      <p>
-        真正有价值的方向，是让 Java 提供可靠的业务能力，让 Agent 负责理解目标、编排工具和提升交付效率。一个负责稳定，一个负责灵活，两者结合起来，才是更接近未来的软件开发方式。
-      </p>
+        <h2>四、测试不只看输出，还要看轨迹</h2>
+        <p>
+          Java 测试通常关注代码逻辑：单元测试验证局部规则，集成测试验证链路，接口测试验证契约，压测验证容量。失败时我们通过日志、堆栈、链路追踪定位问题。
+        </p>
+        <p>
+          Agent 测试要多一层：轨迹是否合理。比如它是否读取了正确文件，是否在修改前查看当前内容，是否在调用第三方 API 前查了官方文档，是否在测试失败后先定位根因而不是乱改。一个结果看似正确但过程不可控的 Agent，很难进入生产环境。
+        </p>
+
+        <figure class="article-figure">
+          <img src="../assets/testing-spectrum.svg" alt="传统测试与 Agent 测试重点对比图">
+          <figcaption>Agent 的质量评估要覆盖结果、路径、权限和恢复能力。只看最后回答会漏掉真正的工程风险。</figcaption>
+        </figure>
+
+        <h2>五、工程师的价值会向“判断力”迁移</h2>
+        <p>
+          Agent 不会让工程师变得不重要，反而会放大工程师的判断力。过去你主要把规则写进代码；现在你还要把工作方式写进系统：如何拆任务，如何检索上下文，如何验证，如何防止越权，如何把一次成功变成可复用流程。
+        </p>
+        <p>
+          对 Java 工程师来说，最值得迁移的能力不是语法，而是工程习惯：边界意识、测试意识、异常意识、可观测性意识。这些能力会直接决定 Agent 是一个炫技 Demo，还是一个真正能帮团队交付的工具。
+        </p>
+
+        <h2>结论：Java 提供稳定能力，Agent 提供协作杠杆</h2>
+        <p>
+          Agent 开发不是替代传统 Java 开发，而是在传统软件工程之上增加一层智能协作。底层服务仍需要 Java 这样的确定性工程体系；Agent 则适合处理跨文件、跨工具、跨流程的复杂任务。
+        </p>
+        <p>
+          真正高级的组合，是让 Java 系统负责稳定能力，让 Agent 负责理解目标、编排工具和提升交付效率。一个负责“可靠运行”，一个负责“复杂协作”，它们不是竞争关系，而是下一阶段工程体系的两块拼图。
+        </p>
+
+        <div class="note-block">
+          <p><strong>落地建议：</strong>如果你是 Java 开发者，不要从“训练模型”开始理解 Agent。先从工作流开始：把你每天如何定位问题、如何读代码、如何验证改动写成可执行规则，这就是 Agent 工程化的入口。</p>
+        </div>
+      </div>
+
+      <aside class="article-aside">
+        <strong>本文要点</strong>
+        <p>Agent 开发的核心变化，是从写确定性逻辑，转向设计可控的智能协作流程。</p>
+        <div class="article-tags">
+          <span>Agent</span>
+          <span>Java</span>
+          <span>工程化</span>
+          <span>测试</span>
+        </div>
+      </aside>
     </article>
   </main>
 
   <footer class="footer">
-    <span>© 2026 Yunxi</span>
+    <span>© 2026 Yunxi · Engineering Notes</span>
     <a href="../">返回首页</a>
   </footer>
 </body>
