@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">Java 架构与 Agent 架构关注点对比</title>
+  <desc id="desc">图中展示 Java 架构关注服务、数据、消息和观测，Agent 架构关注目标、上下文、工具、权限和人工接管。</desc>
+  <rect width="1120" height="560" rx="28" fill="#fffdf7"/>
+  <rect x="32" y="32" width="1056" height="496" rx="22" fill="#f7f4ed" stroke="#ded7c8" stroke-width="2"/>
+
+  <text x="72" y="86" fill="#20201d" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="28" font-weight="800">架构关注点：稳定服务 vs 智能协作</text>
+  <text x="72" y="122" fill="#68645c" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="17">Java 架构解决业务能力如何可靠运行；Agent 架构解决智能体如何可靠地做事。</text>
+
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif">
+    <rect x="92" y="184" width="400" height="292" rx="18" fill="#fffdf7" stroke="#2f6f5e" stroke-width="2"/>
+    <text x="132" y="234" fill="#2f6f5e" font-size="22" font-weight="800">Java 系统</text>
+    <text x="132" y="266" fill="#68645c" font-size="15">面向确定性业务流程</text>
+    <g fill="#20201d" font-size="18" font-weight="700">
+      <text x="132" y="318">服务分层</text>
+      <text x="132" y="358">事务一致性</text>
+      <text x="132" y="398">数据库与缓存</text>
+      <text x="132" y="438">日志、指标、链路追踪</text>
+    </g>
+    <g stroke="#ded7c8" stroke-width="2">
+      <line x1="118" y1="336" x2="466" y2="336"/>
+      <line x1="118" y1="376" x2="466" y2="376"/>
+      <line x1="118" y1="416" x2="466" y2="416"/>
+    </g>
+
+    <rect x="628" y="184" width="400" height="292" rx="18" fill="#fffdf7" stroke="#b85c38" stroke-width="2"/>
+    <text x="668" y="234" fill="#b85c38" font-size="22" font-weight="800">Agent 系统</text>
+    <text x="668" y="266" fill="#68645c" font-size="15">面向复杂任务协作</text>
+    <g fill="#20201d" font-size="18" font-weight="700">
+      <text x="668" y="318">目标与角色边界</text>
+      <text x="668" y="358">上下文检索与压缩</text>
+      <text x="668" y="398">工具编排与权限控制</text>
+      <text x="668" y="438">验证、回滚、人工接管</text>
+    </g>
+    <g stroke="#ded7c8" stroke-width="2">
+      <line x1="654" y1="336" x2="1002" y2="336"/>
+      <line x1="654" y1="376" x2="1002" y2="376"/>
+      <line x1="654" y1="416" x2="1002" y2="416"/>
+    </g>
+
+    <circle cx="560" cy="330" r="52" fill="#20201d"/>
+    <text x="560" y="321" fill="#fffdf7" font-size="16" font-weight="800" text-anchor="middle">共同目标</text>
+    <text x="560" y="348" fill="#fffdf7" font-size="16" font-weight="800" text-anchor="middle">稳定交付</text>
+  </g>
+</svg>
