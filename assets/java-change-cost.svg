@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Java 变更成本曲线</title>
+  <desc id="desc">展示随着耦合、隐式规则和缺少测试增加，Java 项目的变更成本会急剧上升。</desc>
+  <rect width="1280" height="720" rx="34" fill="#fbf7ed"/>
+  <rect x="42" y="42" width="1196" height="636" rx="28" fill="#fffaf0" stroke="#d8cbb7" stroke-width="2"/>
+  <text x="82" y="108" fill="#1d211c" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="34" font-weight="800">变更成本为什么会失控</text>
+  <text x="82" y="148" fill="#6f746d" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="18">可维护性差的项目，问题不是今天慢，而是每次改动都会变得更贵。</text>
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif">
+    <line x1="156" y1="560" x2="1080" y2="560" stroke="#1d211c" stroke-width="3"/>
+    <line x1="156" y1="560" x2="156" y2="210" stroke="#1d211c" stroke-width="3"/>
+    <path d="M180 520 C340 490 470 438 590 348 C704 263 842 218 1050 208" fill="none" stroke="#2f6f5e" stroke-width="6" stroke-linecap="round"/>
+    <path d="M180 524 C340 518 520 512 720 496 C884 482 986 430 1050 314" fill="none" stroke="#b8663b" stroke-width="6" stroke-linecap="round"/>
+    <text x="1086" y="214" fill="#2f6f5e" font-size="17" font-weight="800">边界清晰</text>
+    <text x="1086" y="320" fill="#b8663b" font-size="17" font-weight="800">耦合失控</text>
+    <text x="578" y="622" fill="#6f746d" font-size="17" text-anchor="middle">系统规模 / 需求变化次数</text>
+    <text x="78" y="392" fill="#6f746d" font-size="17" transform="rotate(-90 78 392)" text-anchor="middle">变更成本</text>
+    <g fill="#f7f4ed" stroke="#d8cbb7">
+      <rect x="228" y="246" width="190" height="84" rx="10"/>
+      <rect x="512" y="450" width="220" height="84" rx="10"/>
+      <rect x="790" y="250" width="220" height="84" rx="10"/>
+    </g>
+    <g fill="#1d211c" font-size="17" font-weight="800" text-anchor="middle">
+      <text x="323" y="285">明确边界</text>
+      <text x="622" y="489">测试覆盖</text>
+      <text x="900" y="289">可观测性</text>
+    </g>
+    <g fill="#6f746d" font-size="14" text-anchor="middle">
+      <text x="323" y="312">修改影响可预测</text>
+      <text x="622" y="516">回归风险可控制</text>
+      <text x="900" y="316">线上问题可定位</text>
+    </g>
+  </g>
+</svg>
