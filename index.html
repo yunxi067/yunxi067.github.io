@@ -9,7 +9,7 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=20260528-editorial1">
+  <link rel="stylesheet" href="styles.css?v=20260528-liquid1">
 </head>
 <body>
   <header class="site-header">
@@ -23,32 +23,44 @@
   </header>
 
   <main>
-    <section class="hero editorial-hero">
+    <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Yunxi Engineering Notes</p>
-        <h1>工程判断，比技术热词更重要。</h1>
+        <p class="eyebrow">Engineering Notes / Since 2026</p>
+        <h1>写给真正要把系统做成的人。</h1>
         <p class="lead">
-          这里记录 Java 后端、Agent 工程化和真实交付里的判断过程：问题怎么拆，风险怎么收口，代码怎么长期维护。文章尽量少讲概念，多写现场。
+          这里不追热点词，也不堆模板话。Yunxi 的博客关注 Java 后端、Agent 工程化、全栈交付和真实项目复盘：怎么拆问题、怎么做取舍、怎么让系统长期可维护。
         </p>
-        <a class="text-link" href="#featured">从精选文章开始读</a>
+        <div class="hero-actions">
+          <a class="button primary" href="#featured">进入精选文章</a>
+          <a class="button secondary" href="https://github.com/yunxi067">查看 GitHub</a>
+        </div>
+        <div class="hero-stats" aria-label="博客重点">
+          <div class="stat">
+            <strong>Java</strong>
+            <span>系统稳定性与可维护性</span>
+          </div>
+          <div class="stat">
+            <strong>Agent</strong>
+            <span>工具编排与工程边界</span>
+          </div>
+          <div class="stat">
+            <strong>Delivery</strong>
+            <span>从想法到上线的闭环</span>
+          </div>
+        </div>
       </div>
-      <aside class="editor-note" aria-label="编辑札记">
-        <p class="issue">Issue 001 · 2026 Spring</p>
-        <p>最近写的三件事都指向同一个问题：当系统开始变复杂，工程师怎样保持判断力。</p>
-        <dl>
-          <div>
-            <dt>Agent</dt>
-            <dd>把“会做事”变成“可验证地做事”。</dd>
+      <aside class="signal" aria-label="博客定位">
+        <div class="signal-inner">
+          <p class="signal-kicker">Operating System</p>
+          <h2>Engineering judgment, captured.</h2>
+          <div class="orbit-map" aria-hidden="true">
+            <span class="orbit-core">Y</span>
+            <span class="orbit-node node-java">Java</span>
+            <span class="orbit-node node-agent">Agent</span>
+            <span class="orbit-node node-delivery">Delivery</span>
           </div>
-          <div>
-            <dt>Java</dt>
-            <dd>在需求压力下守住边界和测试。</dd>
-          </div>
-          <div>
-            <dt>Delivery</dt>
-            <dd>让一次经验沉淀成下次的检查清单。</dd>
-          </div>
-        </dl>
+          <p class="signal-copy">把拆解、验证、复盘变成稳定的工程方法，而不是一次性的灵感。</p>
+        </div>
       </aside>
     </section>
 
@@ -62,26 +74,35 @@
           <p>先从这些文章开始。它们覆盖 Agent 开发、Java 可维护性、项目上线三条主线，也是这个博客后续内容的基础。</p>
         </div>
 
-        <div class="featured-grid editorial-featured">
-          <article class="feature-card lead-story">
-            <p class="post-meta">2026.04.12 · Agent Engineering</p>
-            <h3><a href="posts/agent-vs-java-development.html">Agent 开发和传统 Java 开发有什么不同</a></h3>
-            <p>从接口契约、工具协议、修复测试、轨迹评测到人工接管，拆解 Agent 和 Java 的真实工程差异。</p>
-            <img class="card-art" src="assets/agent-operating-model.svg" alt="Agent 工程运行模型缩略图">
+        <div class="featured-grid">
+          <article class="feature-card">
+            <div>
+              <p class="post-meta">2026.04.12 · Agent Engineering</p>
+              <h3><a href="posts/agent-vs-java-development.html">Agent 开发和传统 Java 开发有什么不同</a></h3>
+              <p>从接口契约、工具协议、修复测试、轨迹评测到人工接管，拆解 Agent 和 Java 的真实工程差异。</p>
+              <img class="card-art" src="assets/agent-operating-model.svg" alt="Agent 工程运行模型缩略图">
+              <div class="tag-row">
+                <span>工具编排</span>
+                <span>上下文工程</span>
+                <span>风险边界</span>
+              </div>
+            </div>
             <a class="read-link" href="posts/agent-vs-java-development.html">阅读全文</a>
           </article>
 
-          <div class="side-stack compact-stack">
+          <div class="side-stack">
             <article class="insight-card">
               <p class="post-meta">2026.04.18 · Java Architecture</p>
               <h3><a href="posts/java-maintainability.html">Java 项目如何避免越写越乱</a></h3>
               <p>用真实目录、模型隔离、事务拆分、测试命名和日志字段，建立可持续演进的项目秩序。</p>
+              <img class="card-art" src="assets/java-maintainability-map.svg" alt="Java 可维护性地图缩略图">
               <a class="read-link" href="posts/java-maintainability.html">阅读全文</a>
             </article>
             <article class="insight-card">
               <p class="post-meta">2026.05.01 · Agent Practice</p>
               <h3><a href="posts/agent-production-checklist.html">Agent 工程落地清单</a></h3>
               <p>从权限矩阵、上下文分层、工具轨迹、评测记录到接管触发器，给 Agent 上线前做风险体检。</p>
+              <img class="card-art" src="assets/agent-release-gate.svg" alt="Agent 上线闸门缩略图">
               <a class="read-link" href="posts/agent-production-checklist.html">阅读全文</a>
             </article>
           </div>
@@ -175,6 +196,6 @@
     <span>© 2026 Yunxi · Engineering Notes</span>
     <a href="https://github.com/yunxi067/yunxi067.github.io">Repository</a>
   </footer>
-  <script src="motion.js?v=20260528-editorial1"></script>
+  <script src="motion.js?v=20260528-liquid1"></script>
 </body>
 </html>

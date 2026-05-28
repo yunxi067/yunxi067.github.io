@@ -21,6 +21,18 @@ if (!reduceMotion) {
 
   revealItems.forEach((item) => observer.observe(item));
 
+  const glassItems = document.querySelectorAll(
+    ".feature-card, .insight-card, .post-card, .method, .article-aside, .practice-panel"
+  );
+
+  glassItems.forEach((item) => {
+    item.addEventListener("pointermove", (event) => {
+      const rect = item.getBoundingClientRect();
+      item.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+      item.style.setProperty("--my", `${event.clientY - rect.top}px`);
+    });
+  });
+
   const progress = document.querySelector(".read-progress");
   if (progress) {
     const updateProgress = () => {
