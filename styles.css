@@ -251,6 +251,26 @@ main {
   font-size: 18px;
 }
 
+.article-figure {
+  margin: 36px 0;
+}
+
+.article-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.article-figure figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 .not-found {
   min-height: 100vh;
   display: flex;
