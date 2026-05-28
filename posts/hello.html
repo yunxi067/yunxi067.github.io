@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yunxi 技术博客上线记录。">
-  <title>第一篇：博客上线记录 | Yunxi</title>
+  <meta name="description" content="Yunxi 技术博客上线记录，记录从空仓库到 GitHub Pages 的发布过程。">
+  <title>博客上线记录 | Yunxi</title>
   <link rel="icon" href="/assets/site-icon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -15,34 +15,78 @@
   <header class="site-header">
     <a class="brand" href="../">Yunxi</a>
     <nav class="nav" aria-label="主导航">
+      <a href="../#featured">精选</a>
       <a href="../#posts">文章</a>
-      <a href="../#projects">项目</a>
+      <a href="../#method">方法论</a>
       <a href="../#about">关于</a>
     </nav>
   </header>
 
-  <main>
+  <main class="article-shell">
     <article class="article">
-      <p class="eyebrow">2026-05-27 · GitHub Pages</p>
-      <h1>第一篇：博客上线记录</h1>
-      <p class="lead">
-        这个博客从一个空的 GitHub Pages 仓库开始，使用纯静态文件发布，保持简单、稳定、容易维护。
-      </p>
+      <div class="article-body">
+        <p class="eyebrow">2026-05-27 · GitHub Pages</p>
+        <h1>博客上线记录</h1>
+        <p class="lead">
+          这个博客从一个空的 GitHub Pages 仓库开始，采用纯静态页面发布。目标不是一开始就追求复杂系统，而是先建立一个稳定、可持续更新的技术输出阵地。
+        </p>
 
-      <h2>为什么先用静态页面</h2>
-      <p>
-        首版目标不是搭复杂系统，而是先获得一个可以公开访问、可以持续记录的地方。纯 HTML 和 CSS 没有构建依赖，后续迁移到 Jekyll、Astro 或 VitePress 也很容易。
-      </p>
+        <h2>为什么选择纯静态</h2>
+        <p>
+          对个人技术博客来说，第一阶段最重要的是写作和发布闭环，而不是后台、评论、主题市场或复杂构建链。纯 HTML、CSS 和 GitHub Pages 足够稳定，也足够透明。
+        </p>
+        <p>
+          这种方式的好处是维护成本极低：没有数据库，没有服务端运行时，没有依赖升级压力。每次发布就是一次文件变更和一次 Pages 部署，出问题也容易定位。
+        </p>
 
-      <h2>接下来可以写什么</h2>
-      <p>
-        可以从项目复盘、部署笔记、前后端问题排查、学习路线和工具链配置开始。每篇文章只解决一个问题，越具体越有价值。
-      </p>
+        <h2>当前站点结构</h2>
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>文件</th>
+              <th>作用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>index.html</td>
+              <td>首页和文章入口，负责呈现博客定位、精选内容和文章库。</td>
+            </tr>
+            <tr>
+              <td>styles.css</td>
+              <td>全站视觉系统，包括首页、文章页、图表、表格和响应式布局。</td>
+            </tr>
+            <tr>
+              <td>posts/</td>
+              <td>每篇文章一个独立 HTML 文件，方便静态托管和长期维护。</td>
+            </tr>
+            <tr>
+              <td>assets/</td>
+              <td>站点图标和文章配图。</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>后续演进</h2>
+        <p>
+          如果文章数量增长到几十篇，可以再引入 Astro、VitePress 或静态站点生成器，把文章迁移成 Markdown。但在内容还不多的时候，先把每篇文章写扎实，比搭更复杂的框架更有价值。
+        </p>
+      </div>
+
+      <aside class="article-aside">
+        <strong>本文要点</strong>
+        <p>先建立稳定发布闭环，再考虑复杂化。个人博客第一阶段最重要的是持续输出。</p>
+        <div class="article-tags">
+          <span>GitHub Pages</span>
+          <span>静态站点</span>
+          <span>发布闭环</span>
+        </div>
+      </aside>
     </article>
   </main>
 
   <footer class="footer">
-    <span>© 2026 Yunxi</span>
+    <span>© 2026 Yunxi · Engineering Notes</span>
     <a href="../">返回首页</a>
   </footer>
 </body>
