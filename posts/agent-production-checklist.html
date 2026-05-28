@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="一份把 Agent 从 Demo 推进到可交付工具的工程化清单，覆盖权限、上下文、工具、评测、监控和人工接管。">
+  <title>Agent 工程落地清单 | Yunxi</title>
+  <link rel="icon" href="/assets/site-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../">Yunxi</a>
+    <nav class="nav" aria-label="主导航">
+      <a href="../#featured">精选</a>
+      <a href="../#posts">文章</a>
+      <a href="../#method">方法论</a>
+      <a href="../#about">关于</a>
+    </nav>
+  </header>
+
+  <main class="article-shell">
+    <article class="article">
+      <div class="article-body">
+        <p class="eyebrow">2026-05-28 · Agent Practice</p>
+        <h1>Agent 工程落地清单</h1>
+        <p class="lead">
+          一个 Agent 能演示，不代表它能交付。真正上线前，要回答六个问题：它能做什么，不能做什么，凭什么判断，如何验证，失败怎么办，谁来接管。
+        </p>
+
+        <figure class="article-figure">
+          <img src="../assets/agent-release-gate.svg" alt="Agent 从 Demo 到生产的五道闸门">
+          <figcaption>Agent 上线不是模型能力评估，而是完整工程系统的风险评估。</figcaption>
+        </figure>
+
+        <h2>一、先定义任务边界</h2>
+        <p>
+          不要从“做一个智能助手”开始，那太宽。应该从一个明确任务开始：修复测试失败、整理邮件、生成周报、审查代码、查询知识库、操作某个后台系统。任务越具体，Agent 越容易被验证。
+        </p>
+        <p>
+          边界定义至少包含三项：输入是什么，允许做什么，完成标准是什么。没有完成标准的 Agent 很容易变成“看起来很努力，但不知道是否真的完成”的系统。
+        </p>
+
+        <h2>二、权限必须最小化</h2>
+        <p>
+          Agent 可以调用工具后，权限就是第一风险。能读不代表能写，能写不代表能删除，能调用 API 不代表能操作生产数据。权限应该按任务拆分，而不是按模型能力一次性放开。
+        </p>
+        <ul>
+          <li>读权限和写权限分开。</li>
+          <li>本地文件、远程仓库、数据库、第三方 API 分开授权。</li>
+          <li>删除、覆盖、发布、付款、发邮件等动作必须有确认或审批。</li>
+          <li>所有工具调用都要留下可追踪记录。</li>
+        </ul>
+
+        <h2>三、上下文要可信、够用、不过载</h2>
+        <p>
+          Agent 的很多错误不是模型“笨”，而是上下文错了。它读了旧文档、漏了关键配置、把示例当生产规则，都会导致错误决策。
+        </p>
+        <p>
+          上下文工程要处理三件事：来源可信，版本明确，内容适量。不要把所有东西塞给模型，而是让它按任务检索必要信息，并在关键判断前引用证据。
+        </p>
+
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>上下文类型</th>
+              <th>常见风险</th>
+              <th>工程处理</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>代码文件</td>
+              <td>只读片段导致误判调用关系</td>
+              <td>先检索引用点，再读取关键文件</td>
+            </tr>
+            <tr>
+              <td>接口文档</td>
+              <td>版本过期或训练数据不一致</td>
+              <td>优先查官方文档或项目内签名</td>
+            </tr>
+            <tr>
+              <td>历史对话</td>
+              <td>遗漏用户最新指令</td>
+              <td>执行前复述当前目标和约束</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>四、工具调用要可验证</h2>
+        <p>
+          工具调用不是越多越好。一个可交付 Agent 应该知道什么时候用搜索，什么时候读文件，什么时候跑测试，什么时候停止。每个工具调用都应该服务于下一步决策。
+        </p>
+        <p>
+          关键原则是：高影响操作前必须读上下文，修改后必须验证，失败后必须先定位根因。否则 Agent 会像一个手很快但没有经验的新人，越忙越危险。
+        </p>
+
+        <figure class="article-figure">
+          <img src="../assets/agent-operating-model.svg" alt="Agent 工程运行模型图">
+          <figcaption>工具只是能力入口，真正决定质量的是工具前后的判断、验证和接管机制。</figcaption>
+        </figure>
+
+        <h2>五、评测要覆盖真实任务</h2>
+        <p>
+          如果 Agent 只在玩具任务上表现好，上线后一定会遇到落差。评测集应该来自真实工作：历史 Bug、真实代码库、常见工单、典型邮件、失败部署、用户经常问的问题。
+        </p>
+        <p>
+          评测不要只打一个最终分。更有价值的是分层记录：任务是否完成、是否读了正确上下文、是否调用了正确工具、是否产生不必要修改、失败时是否停止、解释是否可信。
+        </p>
+
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th>评测维度</th>
+              <th>应该观察什么</th>
+              <th>不合格信号</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>任务完成</td>
+              <td>目标是否真实达成，是否通过验证</td>
+              <td>只给解释，没有可验证结果</td>
+            </tr>
+            <tr>
+              <td>上下文质量</td>
+              <td>是否读取了必要文件、文档和历史状态</td>
+              <td>凭常识猜测项目结构或 API 行为</td>
+            </tr>
+            <tr>
+              <td>工具轨迹</td>
+              <td>工具调用是否必要，顺序是否合理</td>
+              <td>跳过读取直接修改，失败后反复试错</td>
+            </tr>
+            <tr>
+              <td>风险控制</td>
+              <td>是否识别高风险操作并停下确认</td>
+              <td>删除、覆盖、发布等操作没有确认</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>六、监控和人工接管决定能不能长期运行</h2>
+        <p>
+          Agent 上线后，必须观察任务成功率、工具失败率、平均成本、人工接管次数、用户撤销次数、错误类型分布。没有监控，就不知道它是在变好还是在悄悄制造风险。
+        </p>
+        <p>
+          人工接管不是失败，而是安全设计。需求不明确、权限不足、测试失败、涉及生产数据、操作不可逆时，Agent 应该主动停下，把证据和建议交给人判断。
+        </p>
+
+        <h3>上线后应该看的指标</h3>
+        <ul>
+          <li>任务成功率：最终是否完成，而不是是否生成了回复。</li>
+          <li>验证通过率：测试、检查、人工抽检通过的比例。</li>
+          <li>人工接管率：哪些任务经常需要人介入，说明边界或上下文还不够好。</li>
+          <li>工具失败率：Shell、API、浏览器、检索工具分别在哪里失败。</li>
+          <li>单位任务成本：每类任务消耗的 token、时间和外部 API 成本。</li>
+        </ul>
+
+        <div class="note-block">
+          <p><strong>上线前最低清单：</strong>任务边界明确；权限最小化；上下文来源可信；工具调用有日志；核心任务有评测集；失败有重试、回滚或人工接管；成本和错误可观测。</p>
+        </div>
+
+        <h2>结论</h2>
+        <p>
+          Agent 工程化的目标不是让模型显得聪明，而是让它在复杂任务中稳定地产生价值。一个真正可交付的 Agent，必须像工程系统一样被设计、测试、监控和治理。
+        </p>
+      </div>
+
+      <aside class="article-aside">
+        <strong>本文要点</strong>
+        <p>Agent 上线标准不是“能回答”，而是“能在边界内可靠完成任务”。</p>
+        <div class="article-tags">
+          <span>Agent</span>
+          <span>生产化</span>
+          <span>权限</span>
+          <span>评测</span>
+        </div>
+      </aside>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Yunxi · Engineering Notes</span>
+    <a href="../">返回首页</a>
+  </footer>
+</body>
+</html>
